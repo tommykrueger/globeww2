@@ -99,12 +99,21 @@ jQuery(document).ready(function($){
       'S': { name: 'Sweden', color: '#dbc8b6' },
       'N': { name: 'Norway', color: '#cccc99' },
       'NL': { name: 'Netherlands', color: '#fe5000' },
-      'PA': { name: 'Panama', color: '#ff0000' },
+      'PA': { name: 'Panama', color: '#005293' },
       'FIN': { name: 'Finland', color: '#777777' },
       'B': { name: 'Belgium', color: '#F9F203' },
       'BR': { name: 'Brazil', color: '#66cc33' },
-      'MEX': { name: 'Mexico', color: '#00ffff' },
-      'PL': { name: 'Poland', color: '#CEAB67' }
+      'MEX': { name: 'Mexico', color: '#B3B3B3' },
+      'PL': { name: 'Poland', color: '#CEAB67' },
+      'AUS': { name: 'Australia', color: '#FEC44F' },
+      'IND': { name: 'India', color: '#006D2C' },
+      'HON': { name: 'Honduras', color: '#6A3D9A' },
+      'E': { name: 'Spain', color: '#FFC400' },
+      'P': { name: 'Portugal', color: '#FFC400' },
+      'YU': { name: 'Jugoslawia', color: '#FFC400' },
+      'RO': { name: 'Romania', color: '#FFC400' },
+      'FF': { name: 'Free France', color: '#ffffff' }
+
     };
 
 
@@ -113,7 +122,6 @@ jQuery(document).ready(function($){
 
 
     $.ajax({
-      // url: './data/atlantic_battle.json',
       url: './data/shipwrecks.json',
       type: 'GET',
       dataType: 'json',
@@ -228,8 +236,6 @@ jQuery(document).ready(function($){
       cc[country] = cc[country] >= 1 ? cc[country] += 1 : cc[country] = 1;
 
     }
-
-    console.log(cc);
 
     for (var i in countries) {
       countries[i].ships = cc[i];
