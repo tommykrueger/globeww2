@@ -22,17 +22,17 @@ Examples:
 
 * The climax of the atlantic battle between Germany und the UK / USA 1942
 
-[http://globeww2.tommykrueger.com/?year=1942&country=GB&country=D&country=USA](http://globeww2.tommykrueger.com/?year=1942&country=GB&country=D&country=USA)
+...[http://globeww2.tommykrueger.com/?year=1942&country=GB&country=D&country=USA](http://globeww2.tommykrueger.com/?year=1942&country=GB&country=D&country=USA)
 
 
 * Pacific War between USA and Japan in 1942
 
-[http://globeww2.tommykrueger.com/?year=1942&country=USA&country=J](http://globeww2.tommykrueger.com/?year=1942&country=USA&country=J)
+...[http://globeww2.tommykrueger.com/?year=1942&country=USA&country=J](http://globeww2.tommykrueger.com/?year=1942&country=USA&country=J)
 
 
 * Losses of German Submarines 1944: 
 
-[http://globeww2.tommykrueger.com/?year=1944&country=D](http://globeww2.tommykrueger.com/?year=1944&country=D)
+...[http://globeww2.tommykrueger.com/?year=1944&country=D](http://globeww2.tommykrueger.com/?year=1944&country=D)
 
 
 
