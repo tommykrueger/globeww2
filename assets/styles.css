@@ -1,0 +1,189 @@
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  color: #fff;
+  font: 13px/20px sans-serif;
+  overflow: hidden;
+}
+
+a {
+  color: #999;
+  text-decoration: none;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+
+
+
+.section {
+
+  padding: 0 1%;
+  position: relative;
+  top: 2%;
+  z-index: 2;
+  overflow: hidden;
+
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 3px;
+  
+}
+
+
+.section-info {
+  width: 270px;
+  max-width: 22%;
+  left: 2%;
+}
+.section-info h1 {
+  font-size: 18px;
+  font-weight: normal;
+}
+.section-info p {
+  font-size: 14px;
+}
+
+
+
+.section-years {
+  width: 480px;
+  padding: 0;
+  left: 50%;
+  margin-left: -240px;
+  position: absolute;
+}
+.section-years li {
+  padding: 6px 10px;
+  float: left;
+  list-style: none;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+.section-years li.active {
+  color: #42BACE;
+  background-color: rgba(0,0,0,0.45);
+}
+
+
+
+
+.section-countries {
+  width: 180px;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  right: 2%;
+  position: absolute;
+
+}
+.section-countries ul li {
+  cursor: pointer;
+}
+.section-countries .icon {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: inline-block;
+}
+.section-countries .name {
+  margin-left: 5px;
+  display: inline-block;
+  vertical-align: top;
+}
+.section-countries .hidden .name {
+  opacity: 0.35;
+}
+
+
+
+
+.footer {
+  font-size: 12px;
+  position: absolute;
+  bottom: 5px;
+  background-color: rgba(0,0,0,0.8);
+  border-radius: 3px;
+  right: 10px;
+  padding: 10px;
+}
+
+
+#tooltip {
+  padding: 2px 6px;
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 100;
+
+  color: #333;
+  box-shadow: 0 0 2px #777;
+  background-color: #f9f9f9;
+  border: 1px solid #e9e9e9;
+}
+
+#tooltip span {
+  display: block;
+}
+
+#tooltip .name {
+  font-weight: bold;
+}
+
+#tooltip .country,
+#tooltip .date,
+#tooltip .type,
+#tooltip .tonnage {
+  font-size: 12px;
+}
+
+
+
+#loader {
+
+  width: 240px;
+  height: 60px;
+  margin: -30px 0 0 -120px;
+  display: block;
+
+  color: #f0f0f0;
+  font-size: 28px;
+  text-transform: uppercase;
+
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 100;
+
+  -webkit-animation-name: blink;
+  -webkit-animation-duration: 1s;
+  animation-name: blink;
+  animation-duration: 1s;
+
+  animation-iteration-count: infinite;
+
+}
+
+
+@-webkit-keyframes blink {
+    from {opacity: 1.0;}
+    to {opacity: 0.35;}
+}
+@keyframes blink {
+    from {opacity: 1.0;}
+    to {opacity: 0.35;}
+}
+

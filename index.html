@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+
+  <title>Ships lost during World War Two 1939 - 1945 | Tommy Kr&uuml;ger</title>
+
+  <meta name="description" content="A 3D globe showing the locations and elevations of 1406 volcanoes on planet earth rendered with WebGL.">
+
+  <link rel="stylesheet" href="./assets/styles.css">
+
+</head>
+
+<body>
+
+
+<div id="loader">Loading ...</div>
+
+<div id="container"></div>
+
+
+
+<div class="section section-info">
+
+  <h1>Ships lost during World War Two 1939 - 1945</h1>
+
+  <p>
+    This 3D globe shows the locations of ships lost during world war 2. The elevations indicate the tonnage of the sunken ship. Ships with at least 1000ts are shown.
+  </p>
+
+  <p>Hover over the lines to see more information.</p>
+
+  <p><a href="http://tommykrueger.com/visualisierung-der-schiffsverluste-im-zweiten-weltkrieg/" target="_blank">Read Instructions</a></p>
+
+</div>
+
+<div class="section section-years">
+  <ul class="years"></ul>
+</div>
+
+<div class="section section-countries">
+  <ul class="countries"></ul>
+</div>
+
+
+<div class="footer">
+  Made with <a href="http://www.chromeexperiments.com/globe" target="_blank">WebGL Globe</a> # 
+  Made by <a href="http://tommykrueger.com/" target="_blank">Tommy Kr&uuml;ger</a> #
+  Made with data from <a href="http://uboat.net/" target="_blank">uboat.net</a> &amp; <a href="https://en.wikipedia.org/wiki/List_of_ships_of_the_Second_World_War" target="_blank">en.wikipedia.org/</a> &amp; <a href="http://www.schiffswrackliste.de/" target="_blank">schiffswrackliste.de</a>
+</div>
+
+
+<div id="tooltip">
+  <span class="name"></span>
+  <span class="type"></span>
+  <span class="country"></span>  
+  <span class="date"></span>  
+  <span class="tonnage"></span>
+</div>
+
+
+<script type="text/javascript" src="./assets/jquery.js"></script>
+<script type="text/javascript" src="./assets/detector.js"></script>
+<script type="text/javascript" src="./assets/three.min.js"></script>
+<script type="text/javascript" src="./assets/globe.js"></script>
+
+<script type="text/javascript">
+
+
+jQuery(document).ready(function($){
+
+  if (!Detector.webgl){
+
+    Detector.addGetWebGLMessage();
+
+  } else {
+
+    var data = null;
+
+    var year = null;
+    var years = [ 1939, 1940, 1941, 1942, 1943, 1944, 1945 ];
+
+    var shownCountries = [];
+    var hiddenCountries = [];
+
+    var countries = {
+      'GB': { name: 'United Kingdom', color: '#de7c00' },
+      'D': { name: 'Germany', color: '#040404' },
+      'USA': { name: 'USA', color: '#00ffff' },
+      'J': { name: 'Japan', color: '#f2f0a1' },
+      'SU': { name: 'Soviet Union', color: '#ff0000' },
+      'F': { name: 'France', color: '#0099cc' },
+      'I': { name: 'Italy', color: '#00ff00' },
+      'CDN': { name: 'Canada', color: '#d62598' },
+      'GR': { name: 'Greece', color: '#ddaf27' },
+      'DK': { name: 'Denmark', color: '#bf975e' },
+      'S': { name: 'Sweden', color: '#dbc8b6' },
+      'N': { name: 'Norway', color: '#cccc99' },
+      'NL': { name: 'Netherlands', color: '#fe5000' },
+      'PA': { name: 'Panama', color: '#ff0000' },
+      'FIN': { name: 'Finland', color: '#777777' },
+      'B': { name: 'Belgium', color: '#F9F203' },
+      'BR': { name: 'Brazil', color: '#66cc33' },
+      'MEX': { name: 'Mexico', color: '#00ffff' },
+      'PL': { name: 'Poland', color: '#CEAB67' }
+    };
+
+
+    var container = document.getElementById('container');
+    var globe = new DAT.Globe(container, $, {countries: countries} );
+
+
+    $.ajax({
+      // url: './data/atlantic_battle.json',
+      url: './data/shipwrecks.json',
+      type: 'GET',
+      dataType: 'json',
+      success: function (d) {
+
+        var urlParams = parseURLParams(window.location.search);
+
+        if (urlParams && urlParams.hasOwnProperty('year')) {
+
+          var y = parseInt(urlParams['year'][0]);
+
+          if ( $.inArray(y, years) != -1 ) {
+            year = y;
+          }
+        }
+
+        if (urlParams && urlParams.hasOwnProperty('country')) {
+          for (i=0; i<urlParams['country'].length; i++) {
+            shownCountries.push( urlParams['country'][i] );
+          }
+        }
+
+
+        if (shownCountries.length) {
+
+          for (var y in d) {
+
+            for (i=0; i<d[y].length; i++) {
+
+              if ( $.inArray(d[y][i].c, hiddenCountries) == -1) {
+                hiddenCountries.push(d[y][i].c);
+              }
+
+            }
+
+          }
+
+          for (i=0; i<hiddenCountries.length; i++) {
+            if ( $.inArray(hiddenCountries[i], shownCountries) != -1 )
+              delete hiddenCountries[i];
+          }
+
+          
+        }
+
+        $('#loader').remove();
+
+        data = d;
+
+        stripCountries(data);
+
+        loadDataSeries(globe, year, true);
+
+        renderMenu(data);
+        renderCountries(data);
+
+      }
+    });
+
+  } 
+
+  function loadDataSeries(globe, year, init) {
+
+    var d = data[year];
+
+    if (!year)
+      d = concatYears(data);
+
+    if (hiddenCountries.length) {
+      var strippedData = [];
+
+      for (var i in d) {
+        if ( $.inArray(d[i].c, hiddenCountries) == -1) {
+          strippedData.push(d[i]);
+        }
+      }
+
+      d = strippedData;
+    }
+
+
+    globe.clearData();
+    globe.addData(d);
+
+    globe.createPoints();
+
+    if (init) {
+      globe.animate();
+    }
+
+  }
+
+
+  function concatYears (data) {
+    var d = [];
+    for (var year in data) {
+      d = d.concat( data[year] );
+    }
+    return d;
+  }
+
+
+  function stripCountries (data) {
+
+    var cc = [];
+
+    data = concatYears(data);
+
+    for (var i = 0; i < data.length; i++) {
+
+      var country = data[i].c;
+      cc[country] = cc[country] >= 1 ? cc[country] += 1 : cc[country] = 1;
+
+    }
+
+    console.log(cc);
+
+    for (var i in countries) {
+      countries[i].ships = cc[i];
+    }
+
+  }
+
+
+
+
+  function renderMenu (data) {
+    var $menu = $('.years');
+
+    $menu.append( '<li data-year="">All Years</li>' );
+
+    $.each(data, function(year){
+      $menu.append( '<li data-year="'+ year +'">'+ year +'</li>' );
+    });
+
+    $menu.find('li:first-child').addClass('active');
+
+    $menu.find('li').on('click', function(e){
+
+      e.preventDefault();
+
+      $menu.find('li').not($(this)).removeClass('active');
+      $(this).addClass('active');
+
+      year = $(this).data('year');
+      loadDataSeries(globe, year, false);
+
+    });
+
+
+    if (year) {
+      $menu.find('li').removeClass('active');
+      $menu.find('li[data-year="'+ year +'"]').addClass('active');
+    }
+
+  }
+
+  function renderCountries (data) {
+
+    var $countries = $('.countries');
+
+    for (var i in countries) {
+        var country = countries[i];
+
+        $countries.append( '<li data-country="'+ i +'"><span class="icon" style="background-color: '+ country.color +';"></span> <span class="name">'+ country.name + ' (' + country.ships + ')</span></li>' );
+
+    }
+
+    $countries.find('li').on('click', function(e){
+        e.preventDefault();
+
+        var country = $(this).data('country');
+
+        if ( $(this).hasClass('hidden') ) {
+
+            hiddenCountries = $.grep(hiddenCountries, function(n,i){ return n != country });
+
+        } else {
+
+            hiddenCountries.push(country);
+
+        }
+
+        $(this).toggleClass('hidden');
+
+        loadDataSeries(globe, year, false);
+
+    });
+
+
+    if (shownCountries.length) {
+
+      $countries.find('li').addClass('hidden');
+
+      for (i=0; i<shownCountries.length; i++) {
+        $countries.find('li[data-country="'+ shownCountries[i] +'"]').removeClass('hidden');
+      }
+      
+    }
+
+  }
+
+
+
+
+
+  // taken from: 
+  // http://stackoverflow.com/questions/814613/how-to-read-get-data-from-a-url-using-javascript
+  function parseURLParams(url) {
+    var queryStart = url.indexOf("?") + 1,
+        queryEnd   = url.indexOf("#") + 1 || url.length + 1,
+        query = url.slice(queryStart, queryEnd - 1),
+        pairs = query.replace(/\+/g, " ").split("&"),
+        parms = {}, i, n, v, nv;
+
+    if (query === url || query === "") {
+        return;
+    }
+
+    for (i = 0; i < pairs.length; i++) {
+        nv = pairs[i].split("=");
+        n = decodeURIComponent(nv[0]);
+        v = decodeURIComponent(nv[1]);
+
+        if (!parms.hasOwnProperty(n)) {
+            parms[n] = [];
+        }
+
+        parms[n].push(nv.length === 2 ? v : null);
+    }
+    return parms;
+}
+
+});
+
+
+
+</script>
+
+</body>
+</html>
